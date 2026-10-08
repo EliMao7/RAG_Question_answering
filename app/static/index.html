@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="教师智能问答系统 —— 基于 RAG 的学习答疑助手">
+  <title>教师智能问答系统</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- ====================== 顶部栏 ======================
+     对应 PRD 5.1.1：Logo + 标题；学科选择下拉；移动端收敛到右上角菜单 -->
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-logo" aria-hidden="true">教师</div>
+    <div class="brand-text">
+      <h1>智能问答系统</h1>
+      <p>基于 RAG 的学习答疑助手</p>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <!-- 学科选择（桌面端常驻；移动端收进抽屉） -->
+    <div class="subject-picker">
+      <label class="sr-only" for="subjectSelect">选择学科</label>
+      <select id="subjectSelect" class="subject-select">
+        <option value="">全学科</option>
+      </select>
+    </div>
+
+    <!-- 交互模式切换（PRD 2.2.2：即时回答 / 流式回答） -->
+    <div class="mode-switch" role="group" aria-label="回答模式">
+      <button type="button" class="mode-btn is-active" data-mode="stream"
+              title="逐步输出，模拟自然对话，适合复杂问题">流式</button>
+      <button type="button" class="mode-btn" data-mode="instant"
+              title="一次性返回完整答案，适合简单问题">即时</button>
+    </div>
+
+    <button type="button" id="menuToggle" class="icon-btn menu-toggle"
+            aria-label="打开菜单" aria-expanded="false">
+      <span class="hamburger"></span>
+    </button>
+  </div>
+</header>
+
+<!-- ====================== 对话区 ======================
+     PRD 5.1.1：滚动容器，用户气泡右对齐、助手气泡左对齐 -->
+<main id="chatArea" class="chat-area" aria-live="polite">
+  <!-- 欢迎卡片（PRD 4.2.3 引导机制：欢迎语 + 示例问题） -->
+  <section id="welcomeCard" class="welcome-card">
+    <h2>你好！我是教师智能学习助手 👋</h2>
+    <p class="welcome-desc">
+      我会依据课程知识库为你解答学习问题，并给出参考资料来源。<br>
+      支持人工智能、Java 开发、软件测试、运维开发、大数据五个方向。
+    </p>
+
+    <div class="examples">
+      <span class="examples-label">试试这些问题：</span>
+      <div class="example-list" id="exampleList">
+        <button type="button" class="example-chip">什么是Transformer？</button>
+        <button type="button" class="example-chip">自注意力机制是怎么工作的？</button>
+        <button type="button" class="example-chip">课程大纲包含哪些阶段？</button>
+        <button type="button" class="example-chip">大模型常见的评估指标有哪些？</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 历史消息渲染到这里 -->
+  <div id="messageList" class="message-list"></div>
+
+  <!-- 加载更多历史（PRD 5.4.2：滚动到底自动加载 + 手动按钮） -->
+  <div class="load-more-wrap">
+    <button type="button" id="loadMoreBtn" class="load-more-btn" hidden>
+      加载更早的对话
+    </button>
+  </div>
+</main>
+
+<!-- ====================== 输入区 ====================== -->
+<footer class="composer">
+  <div class="composer-inner">
+    <textarea id="questionInput" class="question-input" rows="1"
+              placeholder="请输入你的问题..." maxlength="2000"
+              aria-label="问题输入框"></textarea>
+
+    <button type="button" id="sendBtn" class="send-btn" disabled
+            aria-label="发送问题">发送</button>
+
+    <button type="button" id="stopBtn" class="stop-btn" hidden
+            aria-label="停止生成">停止</button>
+  </div>
+
+  <div class="composer-footer">
+    <div class="footer-buttons">
+      <button type="button" id="clearBtn" class="footer-btn danger">清空对话</button>
+      <button type="button" id="historyBtn" class="footer-btn">查看历史</button>
+      <button type="button" id="subjectJumpBtn" class="footer-btn">切换学科</button>
+    </div>
+    <span class="hint" id="inputHint">回车发送 · Shift + 回车换行</span>
+    <span class="counter" id="charCounter">0 / 2000</span>
+  </div>
+</footer>
+
+<!-- ====================== 移动端学科抽屉 ====================== -->
+<div id="drawerMask" class="drawer-mask" hidden></div>
+<aside id="drawer" class="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <strong>切换学科</strong>
+    <button type="button" id="drawerClose" class="icon-btn" aria-label="关闭">✕</button>
+  </div>
+  <div id="drawerSubjects" class="drawer-subjects"></div>
+</aside>
+
+<!-- ====================== 提示条 ====================== -->
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

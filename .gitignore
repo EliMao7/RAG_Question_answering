@@ -1,0 +1,72 @@
+# ============================================================================
+# 教师智能问答系统 — Git 忽略规则
+# ============================================================================
+
+# ---------- 敏感信息（绝不能提交）----------
+# 真实密码与 API Key 放在 .env；仓库里只保留 .env.example
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+
+# ---------- 运行时产物 ----------
+logs/
+*.log
+*.log.*
+
+# 知识库构建清单：内含本地数据目录绝对路径
+index_manifest.json
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ---------- 虚拟环境 ----------
+.venv/
+venv/
+env/
+ENV/
+
+# ---------- 测试与覆盖率 ----------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+
+# ---------- 类型检查与缓存 ----------
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+
+# ---------- 编辑器 / 系统 ----------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- 本地数据与临时文件 ----------
+# 知识库原始语料按需自备，不随仓库分发
+documents/data/
+data/
+tmp/
+temp/
+*.tmp
+
+# ---------- 前端构建产物（本项目为无构建 SPA，通常为空）----------
+node_modules/
+dist/
